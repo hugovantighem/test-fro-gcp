@@ -5,6 +5,11 @@ install-deps:
 generate:
 	go generate ./...
 
-run:
+test:
+	go test ./...
+
+build: generate
 	go build -o main .
+
+run:
 	./main
