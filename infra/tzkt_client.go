@@ -30,7 +30,7 @@ func NewTzktClient(
 	}
 }
 
-func (x TzktClient) GetDelegations(ctx context.Context, id int) ([]app.Delegation, error) {
+func (x TzktClient) GetDelegations(ctx context.Context, id int) ([]app.DelegationDto, error) {
 	req, err := http.NewRequest(http.MethodGet, x.host+endpoint, nil)
 	if err != nil {
 		return nil, app.NewTechnicalError(err, "NewRequest failed")
@@ -59,9 +59,9 @@ func (x TzktClient) GetDelegations(ctx context.Context, id int) ([]app.Delegatio
 		return nil, app.NewTechnicalError(err, "Unmarshal failed")
 	}
 
-	result := make([]app.Delegation, len(dtos))
+	result := make([]app.DelegationDto, len(dtos))
 	for idx, v := range dtos {
-		result[idx] = app.Delegation{
+		result[idx] = app.DelegationDto{
 			Id:          v.Id,
 			Amount:      v.Amount,
 			SenderAddr:  v.Sender.Address,

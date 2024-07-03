@@ -22,7 +22,7 @@ func TestUC(t *testing.T) {
 	t.Run("Success", func(t *testing.T) {
 		ctx := context.Background()
 		svc := app.NewMockThezosSvc(gomock.NewController(t))
-		svc.EXPECT().GetDelegations(ctx, 0).Return([]app.Delegation{}, nil)
+		svc.EXPECT().GetDelegations(ctx, 0).Return([]app.DelegationDto{}, nil)
 
 		err := app.UseCase(ctx, svc)
 		assert.NoError(t, err)
