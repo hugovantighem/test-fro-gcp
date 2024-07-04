@@ -1,7 +1,10 @@
 package app
 
-import "fmt"
+import (
+	"errors"
+)
 
-func NewTechnicalError(err error, msg string) error {
-	return fmt.Errorf("[Technical] %s: %w", msg, err)
-}
+type NotFoundError string
+
+var ErrNotFound = errors.New("[NotFound]")
+var ErrTechnical = errors.New("[Technical]")

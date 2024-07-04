@@ -13,8 +13,8 @@ type InMemoryDelegationStorage struct {
 	items []app.Delegation
 }
 
-func NewInMemoryDelegationStorage() InMemoryDelegationStorage {
-	return InMemoryDelegationStorage{
+func NewInMemoryDelegationStorage() *InMemoryDelegationStorage {
+	return &InMemoryDelegationStorage{
 		mu:    sync.Mutex{},
 		items: make([]app.Delegation, 0),
 	}
@@ -29,11 +29,14 @@ func (x *InMemoryDelegationStorage) Search(ctx context.Context, criteria app.Sea
 func (x *InMemoryDelegationStorage) GetLast(ctx context.Context) (app.Delegation, error) {
 	x.mu.Lock()
 	defer x.mu.Unlock()
+	if len(x.items) == 0 {
+		return app.Delegation{}, app.ErrNotFound
+	}
 	return slices.MaxFunc(x.items, func(a, b app.Delegation) int { return cmp.Compare(a.Id, b.Id) }), nil
 }
-func (x *InMemoryDelegationStorage) Save(ctx context.Context, item app.Delegation) error {
+func (x *InMemoryDelegationStorage) Save(ctx context.Context, items []app.Delegation) error {
 	x.mu.Lock()
 	defer x.mu.Unlock()
-	x.items = append(x.items, item)
+	x.items = append(x.items, items...)
 	return nil
 }

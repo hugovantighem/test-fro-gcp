@@ -13,50 +13,52 @@ import (
 const endpoint = "/v1/operations/delegations"
 
 type TzktClient struct {
-	client      *http.Client
-	host        string
-	resultLimit int
+	client *http.Client
+	host   string
 }
 
 func NewTzktClient(
 	client *http.Client,
 	host string,
-	resultLimit int,
+
 ) app.ThezosSvc {
 	return TzktClient{
-		client:      client,
-		host:        host,
-		resultLimit: resultLimit,
+		client: client,
+		host:   host,
 	}
 }
 
-func (x TzktClient) GetDelegations(ctx context.Context, id int) ([]app.DelegationDto, error) {
+func (x TzktClient) GetDelegations(ctx context.Context, id int, resultLimit int) ([]app.DelegationDto, error) {
 	req, err := http.NewRequest(http.MethodGet, x.host+endpoint, nil)
 	if err != nil {
-		return nil, app.NewTechnicalError(err, "NewRequest failed")
+		return nil, app.ErrTechnical
 	}
 
 	q := req.URL.Query()
-	q.Add("limit", fmt.Sprintf("%d", x.resultLimit))
+	q.Add("limit", fmt.Sprintf("%d", resultLimit))
 	q.Add("sort.asc", "id")
+
+	if id != -1 {
+		q.Add("id.gt", fmt.Sprintf("%d", id))
+	}
 
 	req.URL.RawQuery = q.Encode()
 
 	res, err := x.client.Do(req)
 	if err != nil {
-		return nil, app.NewTechnicalError(err, "Do failed")
+		return nil, app.ErrTechnical
 	}
 
 	defer res.Body.Close()
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		return nil, app.NewTechnicalError(err, "ReadAll failed")
+		return nil, app.ErrTechnical
 	}
 
 	dtos := []DelegationDto{}
 	err = json.Unmarshal(body, &dtos)
 	if err != nil {
-		return nil, app.NewTechnicalError(err, "Unmarshal failed")
+		return nil, app.ErrTechnical
 	}
 
 	result := make([]app.DelegationDto, len(dtos))

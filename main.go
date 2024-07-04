@@ -10,6 +10,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/sethvargo/go-envconfig"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -25,6 +26,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	logrus.SetLevel(logrus.DebugLevel)
+
 	db, err := infra.RunMigrateScripts()
 	if err != nil {
 		log.Fatal(err)
@@ -37,6 +40,8 @@ func main() {
 
 	stop := infra.RunApplication(conf)
 	defer stop()
+
+	// TODO poll delegations
 	<-done
 
 }

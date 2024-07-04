@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"myproject/api"
+	"myproject/app"
 	"net/http"
 	"time"
 
@@ -35,9 +36,17 @@ func RunApplication(conf Config) func() {
 		}
 	}()
 
+	ctx := context.Background()
+
+	quit := app.PollDelegations(ctx,
+		NewInMemoryDelegationStorage(),
+		NewTzktClient(http.DefaultClient, conf.ThezosApiAddr),
+	)
+
 	return func() {
 
 		logrus.Println("Shutting down server...")
+		quit <- true
 
 		// The context is used to inform the server it has 5 seconds to finish
 		// the request it is currently handling

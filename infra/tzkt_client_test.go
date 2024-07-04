@@ -21,9 +21,9 @@ func TestGetDelegations(t *testing.T) {
 		Transport: GetDelegationsStub{},
 	}
 	elmtCount := 8
-	client := infra.NewTzktClient(httpClient, host, elmtCount)
+	client := infra.NewTzktClient(httpClient, host)
 
-	result, err := client.GetDelegations(context.Background(), 0)
+	result, err := client.GetDelegations(context.Background(), 0, elmtCount)
 	require.NoError(t, err)
 	assert.Len(t, result, elmtCount)
 
