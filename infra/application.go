@@ -11,7 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func RunApplication(addr string) func() {
+func RunApplication(conf Config) func() {
 
 	// create a type that satisfies the `api.ServerInterface`, which contains an implementation of every operation from the generated code
 	server := NewServer()
@@ -25,7 +25,7 @@ func RunApplication(addr string) func() {
 
 	s := &http.Server{
 		Handler: r,
-		Addr:    addr,
+		Addr:    conf.ServerAddr,
 	}
 
 	// And we serve HTTP until the world ends.

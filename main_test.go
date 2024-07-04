@@ -10,12 +10,14 @@ import (
 )
 
 func TestApplication(t *testing.T) {
-	addr := "0.0.0.0:8080"
-	stop := infra.RunApplication(addr)
+	conf := infra.Config{
+		ServerAddr: "0.0.0.0:8080",
+	}
+	stop := infra.RunApplication(conf)
 	defer stop()
 
 	<-time.After(time.Second)
-	res, err := http.Get("http://" + addr + "/ping")
+	res, err := http.Get("http://" + conf.ServerAddr + "/ping")
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, res.StatusCode)
 }

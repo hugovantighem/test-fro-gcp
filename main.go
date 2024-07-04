@@ -20,7 +20,7 @@ func main() {
 
 	ctx := context.Background()
 
-	var conf Config
+	var conf infra.Config
 	if err := envconfig.Process(ctx, &conf); err != nil {
 		log.Fatal(err)
 	}
@@ -35,7 +35,7 @@ func main() {
 
 	signal.Notify(done, syscall.SIGINT, syscall.SIGTERM)
 
-	stop := infra.RunApplication("0.0.0.0:8080")
+	stop := infra.RunApplication(conf)
 	defer stop()
 	<-done
 

@@ -1,4 +1,4 @@
-package main
+package infra
 
 type Config struct {
 	ServerAddr    string `env:"SERVER_ADDR"`     // ex: "0.0.0.0:8080"
