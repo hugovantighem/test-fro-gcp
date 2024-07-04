@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"myproject/infra"
 	"os"
 	"os/signal"
@@ -8,6 +9,12 @@ import (
 )
 
 func main() {
+
+	err := infra.RunMigrateScripts()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	done := make(chan os.Signal)
 
 	signal.Notify(done, syscall.SIGINT, syscall.SIGTERM)

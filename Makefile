@@ -11,5 +11,8 @@ test:
 build: generate
 	go build -o main .
 
+start-db:
+	docker run --name postgresql -e POSTGRES_USER=myusername -e POSTGRES_PASSWORD=mypassword -e POSTGRES_DB=mydb -p 5432:5432 -d postgres
+
 run:
 	./main
