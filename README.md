@@ -9,7 +9,9 @@ The `Makefile` contains targets to run individual target, or any target (`*-scra
 
 `make run` to run the application. 
 
-NOTE: the application requires a running postgreSQL that can be run using: `make start-db` (docker required). 
+NOTE: the application requires a running postgreSQL that can be run using: `make start-db` (docker required).
+
+NOTE: the application requires a `.env` file for variable configuration. You can set you own configuration based on `.env-example` file. `copy-env-file` creates a `.env` file compatible with `make start-db` command.
 
 
 # Run the application
