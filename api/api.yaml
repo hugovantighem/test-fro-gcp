@@ -7,11 +7,27 @@ paths:
     get:
       responses:
         '200':
-          description: pet response
+          description: pint
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Pong'
+  /xtz/delegations:
+    get:
+      parameters:
+        - name: year
+          in: query
+          schema:
+            type: integer
+            format: uint32
+            example: 2024
+      responses:
+        '200':
+          description: delegation listing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DelegationsListing'
 components:
   schemas:
     # base types
@@ -23,3 +39,28 @@ components:
         ping:
           type: string
           example: pong
+    DelegationsListing:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items: 
+            $ref: '#/components/schemas/DelegationsListing'
+    Delegation:
+      type: object
+      required:
+        - timestamp
+        - amount
+        - delegator
+        - level
+      properties:
+        timestamp:
+          type: string
+        amount:
+          type: string
+        delegator:
+          type: string
+        level:
+          type: string
