@@ -17,3 +17,8 @@ func (Server) GetPing(ctx context.Context, request api.GetPingRequestObject) (ap
 		Ping: "pong",
 	}, nil
 }
+
+func (Server) GetXtzDelegations(ctx context.Context, request api.GetXtzDelegationsRequestObject) (api.GetXtzDelegationsResponseObject, error) {
+
+	return api.GetXtzDelegations200JSONResponse{}, nil
+}
