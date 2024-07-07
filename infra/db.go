@@ -13,11 +13,9 @@ import (
 	_ "github.com/lib/pq"
 )
 
-const postgreConnString = "postgres://myusername:mypassword@localhost:5432/mydb?sslmode=disable"
+func RunMigrateScripts(conf Config) (*sql.DB, error) {
 
-func RunMigrateScripts() (*sql.DB, error) {
-
-	db, err := sql.Open("postgres", postgreConnString)
+	db, err := sql.Open("postgres", conf.DbConnString)
 	if err != nil {
 		return nil, err
 	}
@@ -39,9 +37,9 @@ func RunMigrateScripts() (*sql.DB, error) {
 	return db, nil
 }
 
-func InitDB() *gorm.DB {
+func InitDB(conf Config) *gorm.DB {
 
-	db, err := gorm.Open(postgres.Open(postgreConnString), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(conf.DbConnString), &gorm.Config{})
 
 	if err != nil {
 		log.Fatalln(err)

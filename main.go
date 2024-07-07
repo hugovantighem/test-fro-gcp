@@ -28,7 +28,7 @@ func main() {
 
 	logrus.SetLevel(logrus.DebugLevel)
 
-	db, err := infra.RunMigrateScripts()
+	db, err := infra.RunMigrateScripts(conf)
 	if err != nil {
 		log.Fatal(err)
 	}
