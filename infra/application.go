@@ -13,9 +13,10 @@ import (
 )
 
 func RunApplication(conf Config) func() {
+	store := NewInMemoryDelegationStorage()
 
 	// create a type that satisfies the `api.ServerInterface`, which contains an implementation of every operation from the generated code
-	server := NewServer()
+	server := NewServer(store)
 
 	r := gin.Default()
 
@@ -39,7 +40,7 @@ func RunApplication(conf Config) func() {
 	ctx := context.Background()
 
 	quit := app.PollDelegations(ctx,
-		NewInMemoryDelegationStorage(),
+		store,
 		NewTzktClient(http.DefaultClient, conf.ThezosApiAddr),
 	)
 

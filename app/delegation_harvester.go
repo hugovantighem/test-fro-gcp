@@ -13,7 +13,7 @@ const noLastId = -1
 func PollDelegations(ctx context.Context, store DelegationStore, tzsSvc ThezosSvc) chan<- bool {
 
 	result := make(chan bool)
-	ticker := time.NewTicker(10 * time.Second)
+	ticker := time.NewTicker(5 * time.Second)
 
 	go func() {
 		for {

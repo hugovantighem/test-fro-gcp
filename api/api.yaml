@@ -28,6 +28,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DelegationsListing'
+        '500':
+          description: error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     # base types
@@ -47,7 +53,7 @@ components:
         data:
           type: array
           items: 
-            $ref: '#/components/schemas/DelegationsListing'
+            $ref: '#/components/schemas/Delegation'
     Delegation:
       type: object
       required:
@@ -63,4 +69,11 @@ components:
         delegator:
           type: string
         level:
+          type: string
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
           type: string

@@ -21,5 +21,5 @@ type DelegationStore interface {
 }
 
 type SearchCriteria struct {
-	Year int
+	Year *int
 }
