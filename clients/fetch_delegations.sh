@@ -1,0 +1,1 @@
+curl http://localhost:8080/xtz/delegations\?year\=2018

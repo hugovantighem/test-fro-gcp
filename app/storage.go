@@ -5,6 +5,7 @@ import (
 	"fmt"
 )
 
+//go:generate mockgen -package=app -source=storage.go -destination=storage.mock.go
 type DelegationStore interface {
 	// -- Read
 

@@ -39,10 +39,12 @@ func RunApplication(conf Config) func() {
 	}()
 
 	ctx := context.Background()
+	trigger := app.NewTickerTrigger(5 * time.Second)
 
 	quit := app.PollDelegations(ctx,
 		store,
 		NewTzktClient(http.DefaultClient, conf.ThezosApiAddr),
+		trigger,
 	)
 
 	return func() {
