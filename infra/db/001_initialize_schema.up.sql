@@ -9,4 +9,6 @@ create table delegations(
 	year        integer not null
 );
 
+CREATE INDEX delegations_year_idx ON delegations;
+
 COMMIT;
