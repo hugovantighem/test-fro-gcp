@@ -20,7 +20,6 @@ func ToDeletationModel(item DelegationDto) Delegation {
 		SenderAddr:  item.SenderAddr,
 		BlockHeight: item.BlockHeight,
 		Timestamp:   item.Timestamp,
-		Year:        item.Timestamp.Year(),
 	}
 
 }

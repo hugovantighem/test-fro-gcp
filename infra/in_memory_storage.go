@@ -29,7 +29,7 @@ func (x *InMemoryDelegationStorage) Search(ctx context.Context, criteria app.Sea
 	result := []app.Delegation{}
 	for _, item := range x.items {
 		if criteria.Year != nil {
-			if item.Year == *criteria.Year {
+			if item.Timestamp.Year() == *criteria.Year {
 				result = append(result, item)
 			}
 		} else {

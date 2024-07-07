@@ -8,6 +8,5 @@ type Delegation struct {
 	Amount      int
 	SenderAddr  string
 	BlockHeight int
-	Timestamp   time.Time `gorm:"column:ts"`
-	Year        int
+	Timestamp   time.Time
 }

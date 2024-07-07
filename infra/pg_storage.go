@@ -22,23 +22,23 @@ func NewPgStorage(
 
 func (x *PgStorage) Search(ctx context.Context, criteria app.SearchCriteria) ([]app.Delegation, error) {
 	logrus.Debugf("search with criteria: %s", criteria)
-	result := []app.Delegation{}
 	tx := x.db
 	if criteria.Year != nil {
-		tx = tx.Where(&app.Delegation{Year: *criteria.Year})
+		tx = tx.Where(&Delegation{Year: *criteria.Year})
 	}
 
-	tx = tx.Find(&result)
+	items := []Delegation{}
+	tx = tx.Find(&items)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
 
-	return result, nil
+	return FromDataModels(items), nil
 }
 
 func (x *PgStorage) GetLast(ctx context.Context) (app.Delegation, error) {
-	result := app.Delegation{}
-	tx := x.db.Last(&result)
+	item := Delegation{}
+	tx := x.db.Last(&item)
 	if tx.Error != nil {
 		if tx.Error == gorm.ErrRecordNotFound {
 			return app.Delegation{}, app.ErrNotFound
@@ -46,12 +46,12 @@ func (x *PgStorage) GetLast(ctx context.Context) (app.Delegation, error) {
 		return app.Delegation{}, tx.Error
 	}
 
-	return result, nil
+	return FromDataModel(item), nil
 }
 
 func (x *PgStorage) Save(ctx context.Context, items []app.Delegation) error {
 	logrus.Debugf("saving: %+v", items)
-	tx := x.db.Create(items)
+	tx := x.db.Create(ToDataModels(items))
 	if tx.Error != nil {
 		return tx.Error
 	}

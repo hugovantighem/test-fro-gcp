@@ -26,6 +26,5 @@ func TestToDeletationModel(t *testing.T) {
 	assert.Equal(t, 30000000000, result.Amount)
 	assert.Equal(t, "tz3WuwwhU8kVReq8f8TJZ1g14mHBmsr8meGn", result.SenderAddr)
 	assert.Equal(t, ts, result.Timestamp)
-	assert.Equal(t, 2019, result.Year)
 	assert.Equal(t, "30000000000", strconv.Itoa(result.Amount))
 }
