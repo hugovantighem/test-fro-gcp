@@ -9,7 +9,7 @@ import (
 
 func ToDelegationDtos(items []app.Delegation) []api.Delegation {
 	result := make([]api.Delegation, len(items))
-	for idx, _ := range items {
+	for idx := range items {
 		result[idx] = ToDelegationDto(items[idx])
 	}
 
@@ -27,7 +27,7 @@ func ToDelegationDto(item app.Delegation) api.Delegation {
 
 func ToDataModels(items []app.Delegation) []Delegation {
 	result := make([]Delegation, len(items))
-	for idx, _ := range items {
+	for idx := range items {
 		result[idx] = ToDataModel(items[idx])
 	}
 
