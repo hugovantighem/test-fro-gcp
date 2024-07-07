@@ -2,18 +2,18 @@ package app
 
 import "github.com/sirupsen/logrus"
 
-func ToDeletationModels(items []DelegationDto) []Delegation {
+func ToDomainModels(items []DelegationDto) []Delegation {
 	result := make([]Delegation, len(items))
 
 	for idx := range items {
 		logrus.Debugf("mapping id=%d", items[idx].Id)
-		result[idx] = ToDeletationModel(items[idx])
+		result[idx] = ToDomainModel(items[idx])
 	}
 
 	return result
 }
 
-func ToDeletationModel(item DelegationDto) Delegation {
+func ToDomainModel(item DelegationDto) Delegation {
 	return Delegation{
 		Id:          item.Id,
 		Amount:      item.Amount,

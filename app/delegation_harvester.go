@@ -56,7 +56,7 @@ func process(ctx context.Context, store DelegationStore, tzsSvc ThezosSvc) error
 		return err
 	}
 
-	err = store.Save(ctx, ToDeletationModels(items))
+	err = store.Save(ctx, ToDomainModels(items))
 	if err != nil {
 		return err
 	}
