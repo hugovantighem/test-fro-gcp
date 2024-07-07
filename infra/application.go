@@ -12,13 +12,30 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+type ShutDownFuncs []func()
+
+func (x ShutDownFuncs) Shutdown() {
+	for i := len(x) - 1; i >= 0; i-- {
+		x[i]()
+	}
+}
+
 func RunApplication(conf Config) func() {
 	var store app.DelegationStore
+
+	var shutdown ShutDownFuncs = []func(){}
 
 	if conf.DbConnString == "" {
 		store = NewInMemoryDelegationStorage()
 	} else {
 		db := InitDB(conf)
+		shutdown = append(shutdown, func() {
+			db, err := db.DB()
+			if err != nil {
+				return
+			}
+			db.Close()
+		})
 		store = NewPgStorage(db)
 	}
 
@@ -52,11 +69,12 @@ func RunApplication(conf Config) func() {
 		NewTzktClient(http.DefaultClient, conf.ThezosApiAddr),
 		trigger,
 	)
+	shutdown = append(shutdown, func() { quit <- true })
 
 	return func() {
 
 		logrus.Println("Shutting down server...")
-		quit <- true
+		shutdown.Shutdown()
 
 		// The context is used to inform the server it has 5 seconds to finish
 		// the request it is currently handling
