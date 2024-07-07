@@ -4,6 +4,8 @@
 
 NOTE: requires docker
 
+curl commands for testing on local server are provided into `client` directory.
+
 # Development
 The `Makefile` contains targets to run individual target, or any target (`*-scratch`) along with all previously required targets as if you just cloned the repository.
 
