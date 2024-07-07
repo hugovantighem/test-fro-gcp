@@ -1,8 +1,8 @@
 BEGIN;
 
-create table delegation(
-    id integer primary key not null,
-	amount      integer not null,
+create table delegations(
+    id bigint primary key not null,
+	amount      bigint not null,
 	sender_addr  varchar(255) not null,
 	block_height integer not null,
 	ts   timestamp not null,

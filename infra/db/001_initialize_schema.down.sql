@@ -1,5 +1,5 @@
 BEGIN;
 
-DROP TABLE IF EXISTS delegation;
+DROP TABLE IF EXISTS delegations;
 
 COMMIT;

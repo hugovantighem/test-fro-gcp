@@ -2,21 +2,27 @@ package infra
 
 import (
 	"database/sql"
+	"log"
+
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 
 	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/postgres"
+	pg "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
 )
 
+const postgreConnString = "postgres://myusername:mypassword@localhost:5432/mydb?sslmode=disable"
+
 func RunMigrateScripts() (*sql.DB, error) {
 
-	db, err := sql.Open("postgres", "postgres://myusername:mypassword@localhost:5432/mydb?sslmode=disable")
+	db, err := sql.Open("postgres", postgreConnString)
 	if err != nil {
 		return nil, err
 	}
 
-	driver, err := postgres.WithInstance(db, &postgres.Config{})
+	driver, err := pg.WithInstance(db, &pg.Config{})
 	if err != nil {
 		return db, err
 	}
@@ -31,4 +37,15 @@ func RunMigrateScripts() (*sql.DB, error) {
 	m.Up()
 
 	return db, nil
+}
+
+func InitDB() *gorm.DB {
+
+	db, err := gorm.Open(postgres.Open(postgreConnString), &gorm.Config{})
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	return db
 }

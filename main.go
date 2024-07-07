@@ -32,7 +32,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
+	db.Close()
 
 	done := make(chan os.Signal)
 
@@ -41,7 +41,6 @@ func main() {
 	stop := infra.RunApplication(conf)
 	defer stop()
 
-	// TODO poll delegations
 	<-done
 
 }
