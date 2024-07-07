@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestToDeletationModel(t *testing.T) {
+func TestToDomainModel(t *testing.T) {
 	ts, err := time.Parse(time.RFC3339, "2019-08-24T14:15:22Z")
 	require.NoError(t, err)
 	item := app.DelegationDto{
@@ -20,7 +20,7 @@ func TestToDeletationModel(t *testing.T) {
 		Timestamp:  ts,
 	}
 
-	result := app.ToDeletationModel(item)
+	result := app.ToDomainModel(item)
 
 	assert.Equal(t, 5084545024, result.Id)
 	assert.Equal(t, 30000000000, result.Amount)
