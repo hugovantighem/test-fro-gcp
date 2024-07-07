@@ -23,14 +23,22 @@ func NewInMemoryDelegationStorage() *InMemoryDelegationStorage {
 }
 
 func (x *InMemoryDelegationStorage) Search(ctx context.Context, criteria app.SearchCriteria) ([]app.Delegation, error) {
-	logrus.Debugf("search with criteria: %+v", criteria)
+	logrus.Debugf("search with criteria: %s", criteria)
 	x.mu.Lock()
 	defer x.mu.Unlock()
-	slices.SortFunc(x.items, func(a, b app.Delegation) int { return cmp.Compare(a.Id, b.Id) })
 	result := []app.Delegation{}
-	result = append(result, x.items...)
+	for _, item := range x.items {
+		if criteria.Year != nil {
+			if item.Year == *criteria.Year {
+				result = append(result, item)
+			}
+		} else {
+			result = append(result, item)
+		}
+	}
 	return result, nil
 }
+
 func (x *InMemoryDelegationStorage) GetLast(ctx context.Context) (app.Delegation, error) {
 	x.mu.Lock()
 	defer x.mu.Unlock()
@@ -39,10 +47,12 @@ func (x *InMemoryDelegationStorage) GetLast(ctx context.Context) (app.Delegation
 	}
 	return slices.MaxFunc(x.items, func(a, b app.Delegation) int { return cmp.Compare(a.Id, b.Id) }), nil
 }
+
 func (x *InMemoryDelegationStorage) Save(ctx context.Context, items []app.Delegation) error {
 	logrus.Debugf("saving: %+v", items)
 	x.mu.Lock()
 	defer x.mu.Unlock()
+	slices.SortFunc(items, func(a, b app.Delegation) int { return cmp.Compare(a.Id, b.Id) })
 	x.items = append(x.items, items...)
 	return nil
 }

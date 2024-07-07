@@ -3,6 +3,7 @@ package infra
 import (
 	"myproject/api"
 	"myproject/app"
+	"strconv"
 	"time"
 )
 
@@ -17,9 +18,9 @@ func ToDelegationDtos(items []app.Delegation) []api.Delegation {
 
 func ToDelegationDto(item app.Delegation) api.Delegation {
 	return api.Delegation{
-		Amount:    string(item.Amount),
+		Amount:    strconv.Itoa(item.Amount),
 		Delegator: item.SenderAddr,
-		Level:     string(item.BlockHeight),
+		Level:     strconv.Itoa(item.BlockHeight),
 		Timestamp: item.Timestamp.Format(time.RFC3339),
 	}
 }

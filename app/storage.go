@@ -1,6 +1,9 @@
 package app
 
-import "context"
+import (
+	"context"
+	"fmt"
+)
 
 type DelegationStore interface {
 	// -- Read
@@ -22,4 +25,12 @@ type DelegationStore interface {
 
 type SearchCriteria struct {
 	Year *int
+}
+
+func (x SearchCriteria) String() string {
+	if x.Year == nil {
+		return "no search criteria"
+	}
+
+	return fmt.Sprintf("year=%d", *x.Year)
 }
