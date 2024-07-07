@@ -13,8 +13,14 @@ import (
 )
 
 func RunApplication(conf Config) func() {
-	db := InitDB(conf)
-	store := NewPgStorage(db)
+	var store app.DelegationStore
+
+	if conf.DbConnString == "" {
+		store = NewInMemoryDelegationStorage()
+	} else {
+		db := InitDB(conf)
+		store = NewPgStorage(db)
+	}
 
 	// create a type that satisfies the `api.ServerInterface`, which contains an implementation of every operation from the generated code
 	server := NewServer(store)

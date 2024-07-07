@@ -11,7 +11,6 @@ import (
 )
 
 func TestPollDelegations(t *testing.T) {
-
 	ctx := context.Background()
 	store := app.NewMockDelegationStore(gomock.NewController(t))
 	store.EXPECT().GetLast(ctx).Return(app.Delegation{
@@ -21,6 +20,7 @@ func TestPollDelegations(t *testing.T) {
 	svc := app.NewMockThezosSvc(gomock.NewController(t))
 	svc.EXPECT().GetDelegations(ctx, gomock.Any(), gomock.Any()).Return([]app.DelegationDto{}, nil)
 	trigger := NewActivableTrigger()
+
 	stop := app.PollDelegations(ctx, store, svc, trigger)
 
 	trigger.Fire()
@@ -29,6 +29,21 @@ func TestPollDelegations(t *testing.T) {
 	<-time.After(time.Second)
 	assert.True(t, trigger.hasStopped)
 
+}
+
+func TestProcess(t *testing.T) {
+	ctx := context.Background()
+	store := app.NewMockDelegationStore(gomock.NewController(t))
+	store.EXPECT().GetLast(ctx).Return(app.Delegation{
+		Id: 10,
+	}, nil)
+	store.EXPECT().Save(ctx, gomock.Any()).Return(nil)
+	svc := app.NewMockThezosSvc(gomock.NewController(t))
+	svc.EXPECT().GetDelegations(ctx, gomock.Any(), gomock.Any()).Return([]app.DelegationDto{}, nil)
+
+	err := app.Process(ctx, store, svc)
+
+	assert.NoError(t, err)
 }
 
 type ActivableTrigger struct {
