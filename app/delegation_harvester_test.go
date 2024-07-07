@@ -2,6 +2,7 @@ package app_test
 
 import (
 	"context"
+	"fmt"
 	"myproject/app"
 	"testing"
 	"time"
@@ -32,18 +33,60 @@ func TestPollDelegations(t *testing.T) {
 }
 
 func TestProcess(t *testing.T) {
-	ctx := context.Background()
-	store := app.NewMockDelegationStore(gomock.NewController(t))
-	store.EXPECT().GetLast(ctx).Return(app.Delegation{
-		Id: 10,
-	}, nil)
-	store.EXPECT().Save(ctx, gomock.Any()).Return(nil)
-	svc := app.NewMockThezosSvc(gomock.NewController(t))
-	svc.EXPECT().GetDelegations(ctx, gomock.Any(), gomock.Any()).Return([]app.DelegationDto{}, nil)
 
-	err := app.Process(ctx, store, svc)
+	t.Run("Error", func(t *testing.T) {
+		t.Run("GetLast", func(t *testing.T) {
+			ctx := context.Background()
+			store := app.NewMockDelegationStore(gomock.NewController(t))
+			store.EXPECT().GetLast(ctx).Return(app.Delegation{}, fmt.Errorf("error"))
+			svc := app.NewMockThezosSvc(gomock.NewController(t))
 
-	assert.NoError(t, err)
+			err := app.Process(ctx, store, svc)
+
+			assert.Error(t, err)
+		})
+		t.Run("GetDelegations", func(t *testing.T) {
+			ctx := context.Background()
+			store := app.NewMockDelegationStore(gomock.NewController(t))
+			store.EXPECT().GetLast(ctx).Return(app.Delegation{
+				Id: 10,
+			}, nil)
+			svc := app.NewMockThezosSvc(gomock.NewController(t))
+			svc.EXPECT().GetDelegations(ctx, gomock.Any(), gomock.Any()).Return(nil, fmt.Errorf("error"))
+
+			err := app.Process(ctx, store, svc)
+
+			assert.Error(t, err)
+		})
+		t.Run("Save", func(t *testing.T) {
+			ctx := context.Background()
+			store := app.NewMockDelegationStore(gomock.NewController(t))
+			store.EXPECT().GetLast(ctx).Return(app.Delegation{
+				Id: 10,
+			}, nil)
+			store.EXPECT().Save(ctx, gomock.Any()).Return(fmt.Errorf("error"))
+			svc := app.NewMockThezosSvc(gomock.NewController(t))
+			svc.EXPECT().GetDelegations(ctx, gomock.Any(), gomock.Any()).Return([]app.DelegationDto{}, nil)
+
+			err := app.Process(ctx, store, svc)
+
+			assert.Error(t, err)
+		})
+	})
+	t.Run("Success", func(t *testing.T) {
+		ctx := context.Background()
+		store := app.NewMockDelegationStore(gomock.NewController(t))
+		store.EXPECT().GetLast(ctx).Return(app.Delegation{
+			Id: 10,
+		}, nil)
+		store.EXPECT().Save(ctx, gomock.Any()).Return(nil)
+		svc := app.NewMockThezosSvc(gomock.NewController(t))
+		svc.EXPECT().GetDelegations(ctx, gomock.Any(), gomock.Any()).Return([]app.DelegationDto{}, nil)
+
+		err := app.Process(ctx, store, svc)
+
+		assert.NoError(t, err)
+	})
 }
 
 type ActivableTrigger struct {
