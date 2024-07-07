@@ -24,11 +24,3 @@ run unit tests
 make test-scratch
 ```
 
-
-
-
-
-
-
-
-psql -U myusername -d mydb
