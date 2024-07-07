@@ -9,6 +9,11 @@ import (
 
 const noLastId = -1
 
+// PollDelegations fetches delegation from external service whenever the trigger fires.
+//
+// delegation are fetched based on the highest fetched id.
+//
+// returns a channel to complete gracefully by stopping the trigger and stop polling delegations.
 func PollDelegations(ctx context.Context, store DelegationStore, tzsSvc ThezosSvc, trigger Trigger) chan<- bool {
 
 	result := make(chan bool)
@@ -34,6 +39,15 @@ func PollDelegations(ctx context.Context, store DelegationStore, tzsSvc ThezosSv
 	return result
 }
 
+// process get the last id stored.
+//
+// fetches from external service for id > found id or from the beginning if not previous entry is found.
+//
+// saves the ne entries.
+//
+// returns an error if any.
+//
+// NOTE: should return Retryable and NonRetryable errors.
 func process(ctx context.Context, store DelegationStore, tzsSvc ThezosSvc) error {
 	item, err := store.GetLast(ctx)
 
