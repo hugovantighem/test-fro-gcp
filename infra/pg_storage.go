@@ -27,6 +27,8 @@ func (x *PgStorage) Search(ctx context.Context, criteria app.SearchCriteria) ([]
 		tx = tx.Where(&Delegation{Year: *criteria.Year})
 	}
 
+	tx = tx.Order("ts DESC")
+
 	items := []Delegation{}
 	tx = tx.Find(&items)
 	if tx.Error != nil {
